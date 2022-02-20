@@ -1,4 +1,5 @@
 mod game;
+mod sprites;
 mod ui;
 
 use bevy::prelude::*;
@@ -21,6 +22,7 @@ fn main() {
         // Plugins
         .add_plugin(game::GamePlugin)
         .add_plugin(ui::UiPlugin)
+        .add_plugin(sprites::SpritePlugin)
         .add_plugins(DefaultPlugins)
         //
         // Run the Game

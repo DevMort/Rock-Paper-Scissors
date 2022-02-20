@@ -1,4 +1,6 @@
 mod game;
+mod input;
+mod juice;
 mod sprites;
 mod ui;
 
@@ -23,6 +25,8 @@ fn main() {
         .add_plugin(game::GamePlugin)
         .add_plugin(ui::UiPlugin)
         .add_plugin(sprites::SpritePlugin)
+        .add_plugin(input::InputPlugin)
+        .add_plugin(juice::JuicePlugin)
         .add_plugins(DefaultPlugins)
         //
         // Run the Game

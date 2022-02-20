@@ -8,11 +8,11 @@ const PAPER_SPRITE_PATH: &str = "paper.png";
 const SCISSORS_SPRITE_PATH: &str = "scissors.png";
 
 #[derive(Component)]
-struct Rock;
+pub struct Rock;
 #[derive(Component)]
-struct Paper;
+pub struct Paper;
 #[derive(Component)]
-struct Scissors;
+pub struct Scissors;
 
 fn setup_sprites(mut commands: Commands, asset_server: Res<AssetServer>) {
     // spawn the rock

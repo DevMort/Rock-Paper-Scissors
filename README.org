@@ -1,0 +1,5 @@
+* Rock Paper Scissors
+
+A simple game made with rust and bevy. This game was made 'cause I wanted to learn about ECS (Entity Component System).
+
+[[./preview.gif]]

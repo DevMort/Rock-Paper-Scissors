@@ -1,4 +1,4 @@
-use crate::game::GameState;
+use crate::game::{GameState, Globals};
 use crate::sprites::{Paper, Rock, Scissors};
 use bevy::core::FixedTimestep;
 use bevy::prelude::*;
@@ -10,12 +10,18 @@ fn within_bounds(mouse_x: f32, mouse_y: f32, x1: f32, x2: f32, y1: f32, y2: f32)
 
 fn player_turn_hover_juice(
     windows: Res<Windows>,
+
     mut sprites: QuerySet<(
         QueryState<&mut Transform, With<Rock>>,
         QueryState<&mut Transform, With<Paper>>,
         QueryState<&mut Transform, With<Scissors>>,
     )>,
+    state: Res<State<GameState>>,
 ) {
+    if *state.current() != GameState::PlayerChoosing {
+        return;
+    }
+
     let (mouse_x, mouse_y) = match windows
         .get_primary()
         .expect("Cannot get window.")
@@ -53,7 +59,7 @@ fn player_turn_hover_juice(
     }
 }
 
-fn player_turn_exit(
+fn turn_exit(
     mut sprites: QuerySet<(
         QueryState<&mut Transform, With<Rock>>,
         QueryState<&mut Transform, With<Paper>>,
@@ -77,7 +83,13 @@ fn enemy_turn_hovering(
         QueryState<&mut Transform, With<Paper>>,
         QueryState<&mut Transform, With<Scissors>>,
     )>,
+    mut globals: ResMut<Globals>,
+    state: Res<State<GameState>>,
 ) {
+    if *state.current() != GameState::EnemyChoosing {
+        return;
+    }
+
     let mut rng = rand::thread_rng();
     let i = rng.gen_range(1..=3);
 
@@ -92,6 +104,8 @@ fn enemy_turn_hovering(
             for mut s in sprites.q2().iter_mut() {
                 s.scale = Vec3::splat(0.5);
             }
+
+            globals.enemy_choice = Some(String::from("rock"));
         }
         2 => {
             for mut r in sprites.q0().iter_mut() {
@@ -103,6 +117,8 @@ fn enemy_turn_hovering(
             for mut s in sprites.q2().iter_mut() {
                 s.scale = Vec3::splat(0.5);
             }
+
+            globals.enemy_choice = Some(String::from("paper"));
         }
         3 => {
             for mut r in sprites.q0().iter_mut() {
@@ -114,6 +130,8 @@ fn enemy_turn_hovering(
             for mut s in sprites.q2().iter_mut() {
                 s.scale = Vec3::splat(0.6);
             }
+
+            globals.enemy_choice = Some(String::from("scissors"));
         }
         _ => {
             for mut r in sprites.q0().iter_mut() {
@@ -125,6 +143,8 @@ fn enemy_turn_hovering(
             for mut s in sprites.q2().iter_mut() {
                 s.scale = Vec3::splat(0.5);
             }
+
+            globals.enemy_choice = None;
         }
     }
 }
@@ -135,11 +155,12 @@ impl Plugin for JuicePlugin {
         app.add_system_set(
             SystemSet::on_update(GameState::PlayerChoosing).with_system(player_turn_hover_juice),
         )
-        .add_system_set(SystemSet::on_exit(GameState::PlayerChoosing).with_system(player_turn_exit))
+        .add_system_set(SystemSet::on_exit(GameState::PlayerChoosing).with_system(turn_exit))
         .add_system_set(
             SystemSet::on_update(GameState::EnemyChoosing)
                 .with_system(enemy_turn_hovering)
-                .with_run_criteria(FixedTimestep::step(0.6)),
-        );
+                .with_run_criteria(FixedTimestep::step(1.0)),
+        )
+        .add_system_set(SystemSet::on_exit(GameState::EnemyChoosing).with_system(turn_exit));
     }
 }

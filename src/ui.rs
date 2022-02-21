@@ -2,7 +2,7 @@ use crate::game;
 use bevy::prelude::*;
 
 pub const WINDOW_WIDTH: f32 = 640f32;
-pub const WINDOW_HEIGHT: f32 = 480f32;
+//pub const WINDOW_HEIGHT: f32 = 480f32;
 const FONT_PATH: &str = "Brush Stroke.ttf";
 
 #[derive(Component)]
@@ -66,8 +66,10 @@ fn change_middle_text(
             String::from("Choose between rock, paper, and scissors.")
         }
         game::GameState::EnemyChoosing => String::from("Enemy is choosing."),
-        game::GameState::PlayerWin => String::from("You won!"),
-        game::GameState::EnemyWin => String::from("Enemy won!"),
+        game::GameState::PlayerWin => String::from("You won! Press enter to restart."),
+        game::GameState::EnemyWin => String::from("Enemy won! Press enter to restart."),
+        game::GameState::Evaluating => String::from("..."),
+        game::GameState::Tie => String::from("It's a tie! Press enter to restart."),
     };
 
     for mut t in text_query.iter_mut() {
@@ -80,8 +82,6 @@ impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(setup_camera)
             .add_startup_system(show_middle_text)
-            .add_system_set(
-                SystemSet::on_enter(game::GameState::EnemyChoosing).with_system(change_middle_text),
-            );
+            .add_system(change_middle_text);
     }
 }

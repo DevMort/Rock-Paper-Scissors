@@ -1,8 +1,8 @@
-use crate::ui::{WINDOW_HEIGHT, WINDOW_WIDTH};
+use crate::ui::WINDOW_WIDTH;
 use bevy::prelude::*;
 
 const SPRITES_WIDTH: f32 = 310f32;
-const SPRITES_HEIGHT: f32 = 656f32;
+//const SPRITES_HEIGHT: f32 = 656f32;
 const ROCK_SPRITE_PATH: &str = "rock.png";
 const PAPER_SPRITE_PATH: &str = "paper.png";
 const SCISSORS_SPRITE_PATH: &str = "scissors.png";

@@ -159,7 +159,7 @@ impl Plugin for JuicePlugin {
         .add_system_set(
             SystemSet::on_update(GameState::EnemyChoosing)
                 .with_system(enemy_turn_hovering)
-                .with_run_criteria(FixedTimestep::step(1.0)),
+                .with_run_criteria(FixedTimestep::step(0.5)),
         )
         .add_system_set(SystemSet::on_exit(GameState::EnemyChoosing).with_system(turn_exit));
     }
